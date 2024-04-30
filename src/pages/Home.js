@@ -69,7 +69,9 @@ export default function Home() {
           >
             <MenuItem value="all">All</MenuItem>
             {categories.map((c) => (
-              <MenuItem key={c} value={c}>{c}</MenuItem>
+              <MenuItem key={c} value={c}>
+                {c}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
@@ -117,18 +119,11 @@ export default function Home() {
                         </Typography>
                       </Box>
                     </CardContent>
-                    <CardActions
-                      sx={{
-                        display: "flex",
-                        flex: 1,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        margin: "0 10px",
-                      }}
-                    >
+
+                    <Box padding={1}>
                       <UserButtons />
                       <AdminButtons />
-                    </CardActions>
+                    </Box>
                   </Card>
                 </Grid>
               ))}
