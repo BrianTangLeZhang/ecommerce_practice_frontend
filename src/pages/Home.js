@@ -1,9 +1,9 @@
+import Header from "../components/header";
 import { useState } from "react";
 import {
   Box,
   Button,
   Card,
-  Divider,
   Typography,
   Container,
   Grid,
@@ -33,18 +33,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Typography
-        variant="h3"
-        sx={{
-          fontWeight: "bold",
-          display: "flex",
-          flex: 1,
-          justifyContent: "center",
-        }}
-      >
-        Welcome to My Store
-      </Typography>
-      <Divider sx={{ marginY: 4 }} />
+      <Header />
       <Box sx={{ flexDirection: "column" }}>
         <Box sx={{ flex: 1, display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
