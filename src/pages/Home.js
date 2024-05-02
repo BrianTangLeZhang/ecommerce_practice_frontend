@@ -17,6 +17,7 @@ import { getProducts, getCategories } from "../utils/api_products";
 import { useQuery } from "@tanstack/react-query";
 import AdminButtons from "../components/buttons";
 import UserButtons from "../components/userBtn";
+import ProductCard from "../components/productCard";
 
 export default function Home() {
   const [category, setCategory] = useState("");
@@ -64,54 +65,10 @@ export default function Home() {
         </FormControl>
         <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
           {products ? (
-            <Grid container spacing={6}>
+            <Grid container spacing={3}>
               {products.map((p) => (
-                <Grid item xs={12} sm={6} md={4} key={p._id}>
-                  <Card sx={{ minHeight: "175px", padding: 1 }}>
-                    <Typography variant="h6" fontWeight="bold">
-                      {p.name}
-                    </Typography>
-                    <CardContent flex={1}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <Typography
-                          variant="span"
-                          sx={{
-                            backgroundColor: "lightgreen",
-                            borderRadius: 10,
-                            padding: 1,
-                            fontStyle: "italic",
-                            fontWeight: "bold",
-                            color: "white",
-                          }}
-                        >
-                          $ {p.price}
-                        </Typography>
-                        <Typography
-                          variant="span"
-                          sx={{
-                            backgroundColor: "orange",
-                            borderRadius: 10,
-                            padding: 1,
-                            fontStyle: "italic",
-                            fontWeight: "bold",
-                            color: "white",
-                          }}
-                        >
-                          {p.category}
-                        </Typography>
-                      </Box>
-                    </CardContent>
-
-                    <Box padding={1}>
-                      <UserButtons />
-                      <AdminButtons />
-                    </Box>
-                  </Card>
+                <Grid item xs={12} md={6} lg={4} key={p._id}>
+                  <ProductCard product={p} />
                 </Grid>
               ))}
             </Grid>
