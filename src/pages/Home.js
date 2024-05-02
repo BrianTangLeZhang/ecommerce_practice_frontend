@@ -8,8 +8,6 @@ import {
   Container,
   Grid,
   CardContent,
-  CardActions,
-  CardHeader,
   Select,
   MenuItem,
   InputLabel,
@@ -28,7 +26,7 @@ export default function Home() {
     queryFn: () => getProducts(category),
   });
 
-  const { data: categories = [], isLoading } = useQuery({
+  const { data: categories = [] } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,
   });
@@ -46,7 +44,7 @@ export default function Home() {
       >
         Welcome to My Store
       </Typography>
-      <Divider sx={{ margin: "10px 0" }} />
+      <Divider sx={{ marginY: 4 }} />
       <Box sx={{ flexDirection: "column" }}>
         <Box sx={{ flex: 1, display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
@@ -102,7 +100,7 @@ export default function Home() {
                             color: "white",
                           }}
                         >
-                          {p.price}
+                          $ {p.price}
                         </Typography>
                         <Typography
                           variant="span"
