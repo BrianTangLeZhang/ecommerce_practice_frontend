@@ -5,11 +5,11 @@ import AdminButtons from "./buttons";
 export default function ProductCard(props) {
   const { product } = props;
   return (
-    <Card sx={{ minHeight: "200px", padding: 1 }}>
+    <Card sx={{ padding: 1 }}>
       <Typography variant="p" fontSize={20} fontWeight="bold">
         {product.name}
       </Typography>
-      <CardContent >
+      <CardContent>
         <Box
           sx={{
             display: "flex",
