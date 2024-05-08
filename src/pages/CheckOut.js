@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Container,
   Grid,
@@ -13,6 +13,7 @@ import Header from "../components/header";
 import { getCart } from "../utils/api_cart";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createOrder } from "../utils/api_orders";
+import { removeAll } from "../utils/api_cart";
 import { useState } from "react";
 
 export default function CheckOutPage() {
@@ -27,6 +28,8 @@ export default function CheckOutPage() {
     queryKey: ["cart"],
     queryFn: getCart,
   });
+
+  const queryClient = useQueryClient();
 
   const calculateTotal = () => {
     let total = 0;
@@ -59,8 +62,20 @@ export default function CheckOutPage() {
         products: [...checkoutItems],
         total: calculateTotal(),
       });
+      removeAllMutation.mutate();
     }
   };
+  const removeAllMutation = useMutation({
+    mutationFn: removeAll,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
+    },
+    onError: (e) => {
+      alert(e);
+    },
+  });
 
   return (
     <Container>

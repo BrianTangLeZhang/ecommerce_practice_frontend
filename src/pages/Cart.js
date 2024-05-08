@@ -12,11 +12,9 @@ import {
 } from "@mui/material";
 import Header from "../components/header";
 import { getCart, removeItem, removeAll } from "../utils/api_cart";
-import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function CartPage() {
-  const location = useLocation();
-
   const nav = useNavigate();
   const queryClient = useQueryClient();
 
@@ -28,26 +26,13 @@ export default function CartPage() {
   const calculateTotal = () => {
     let total = 0;
     cartItems.forEach((item) => {
-      total += item.quantity * item.price;
+      total = total + item.quantity * item.price;
     });
-    return total.toFixed(2);
+    return total;
   };
 
   const removeItemMutation = useMutation({
     mutationFn: removeItem,
-    onSuccess: () => {
-      alert("Success");
-      queryClient.invalidateQueries({
-        queryKey: ["cart"],
-      });
-    },
-    onError: (e) => {
-      alert(e);
-    },
-  });
-
-  const removeAllMutation = useMutation({
-    mutationFn: removeAll,
     onSuccess: () => {
       alert("Success");
       queryClient.invalidateQueries({
@@ -68,18 +53,9 @@ export default function CartPage() {
     }
   };
 
-  const handleRemoveAll = () => {
-    const confirm = window.confirm(
-      "Are you sure you want to remove this item from cart?"
-    );
-    if (confirm) {
-      removeAllMutation.mutate();
-    }
-  };
-
   return (
     <Container>
-      <Header location={location.pathname} />
+      <Header />
       {cartItems.length === 0 ? (
         <Box textAlign="center" mt={3}>
           <Typography variant="h5">Cart is empty</Typography>
@@ -134,31 +110,15 @@ export default function CartPage() {
               </TableFooter>
             </Table>
           </TableContainer>
-          <Box mt={3} display={"flex"} justifyContent={"space-between"}>
-            <Button
-              variant="contained"
-              color="warning"
-              onClick={handleRemoveAll}
-            >
-              Clear Items
-            </Button>
+          <Box mt={3} display={"flex"} justifyContent={"end"}>
             <Button
               variant="contained"
               color="primary"
-              onClick={() => {
-                queryClient.invalidateQueries({
-                  queryKey: "cart",
-                });
-                nav("/checkout");
-              }}
+              size="large"
+              onClick={() => nav("/checkout")}
             >
               Checkout
             </Button>
-          </Box>
-          <Box mt={3} textAlign="center">
-            <Typography component={Link} to="/">
-              Go Back
-            </Typography>
           </Box>
         </>
       )}
