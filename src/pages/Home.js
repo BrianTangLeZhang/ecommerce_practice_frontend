@@ -14,11 +14,13 @@ import {
 import { getProducts, getCategories } from "../utils/api_products";
 import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../components/productCard";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [category, setCategory] = useState("");
   const [page, setPage] = useState(1);
+
+  const location = useLocation();
 
   const nav = useNavigate();
 
@@ -34,7 +36,7 @@ export default function Home() {
 
   return (
     <Container>
-      <Header />
+      <Header location={location.pathname} />
       <Box sx={{ flexDirection: "column" }}>
         <Box sx={{ flex: 1, display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>

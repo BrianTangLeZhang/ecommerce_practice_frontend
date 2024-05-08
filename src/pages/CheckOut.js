@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Container,
   Grid,
@@ -11,10 +11,17 @@ import {
 } from "@mui/material";
 import Header from "../components/header";
 import { getCart } from "../utils/api_cart";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { createOrder } from "../utils/api_orders";
+import { useState } from "react";
 
 export default function CheckOutPage() {
   const location = useLocation();
+
+  const nav = useNavigate();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   const { data: checkoutItems = [] } = useQuery({
     queryKey: ["cart"],
@@ -26,12 +33,38 @@ export default function CheckOutPage() {
     checkoutItems.forEach((item) => {
       total = total + item.quantity * item.price;
     });
-    return total;
+    return total.toFixed(2);
+  };
+
+  const createNewOrderMutation = useMutation({
+    mutationFn: createOrder,
+    onSuccess: () => {
+      alert("Success");
+      nav("/orders");
+    },
+    onError: (e) => {
+      alert(e);
+    },
+  });
+
+  const handleCheckOut = (e) => {
+    if (name === "" || email === "") {
+      alert("You must fill the infomation before you make payment");
+    } else if (!checkoutItems && checkoutItems.length < 1) {
+      alert("Your cart is empty");
+    } else {
+      createNewOrderMutation.mutate({
+        customerName: name,
+        customerEmail: email,
+        products: [...checkoutItems],
+        total: calculateTotal(),
+      });
+    }
   };
 
   return (
     <Container>
-      <Header location={location} />
+      <Header location={location.pathname} />
       <Box container display={"flex"} justifyContent={"space-between"}>
         <Grid
           container
@@ -59,6 +92,8 @@ export default function CheckOutPage() {
                 variant="outlined"
                 color="info"
                 fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
               <Typography>Email</Typography>
               <TextField
@@ -67,9 +102,16 @@ export default function CheckOutPage() {
                 variant="outlined"
                 color="info"
                 fullWidth
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <Box sx={{ py: 3, textAlign: "center" }}>
-                <Button variant="contained" color="info" size="large">
+                <Button
+                  variant="contained"
+                  color="info"
+                  size="large"
+                  onClick={handleCheckOut}
+                >
                   Pay (${calculateTotal()}) Now
                 </Button>
               </Box>

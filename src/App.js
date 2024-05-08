@@ -5,6 +5,7 @@ import ProductAddNew from "./pages/ProductAddNew";
 import CartPage from "./pages/Cart";
 import ProductsEdit from "./pages/ProdustEdit";
 import CheckOutPage from "./pages/CheckOut";
+import AllOrders from "./pages/Orders";
 
 const queryClient = new QueryClient();
 
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="/cart" element={<CartPage />}></Route>
           <Route path="/edit/:id" element={<ProductsEdit />}></Route>
           <Route path="/checkout" element={<CheckOutPage />}></Route>
+          <Route path="/orders" element={<AllOrders />}></Route>
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

@@ -11,10 +11,12 @@ import {
   Paper,
 } from "@mui/material";
 import Header from "../components/header";
-import { getCart, removeItem } from "../utils/api_cart";
-import { useNavigate, Link } from "react-router-dom";
+import { getCart, removeItem, removeAll } from "../utils/api_cart";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 
 export default function CartPage() {
+  const location = useLocation();
+
   const nav = useNavigate();
   const queryClient = useQueryClient();
 
@@ -26,13 +28,26 @@ export default function CartPage() {
   const calculateTotal = () => {
     let total = 0;
     cartItems.forEach((item) => {
-      total = total + item.quantity * item.price;
+      total += item.quantity * item.price;
     });
-    return total;
+    return total.toFixed(2);
   };
 
   const removeItemMutation = useMutation({
     mutationFn: removeItem,
+    onSuccess: () => {
+      alert("Success");
+      queryClient.invalidateQueries({
+        queryKey: ["cart"],
+      });
+    },
+    onError: (e) => {
+      alert(e);
+    },
+  });
+
+  const removeAllMutation = useMutation({
+    mutationFn: removeAll,
     onSuccess: () => {
       alert("Success");
       queryClient.invalidateQueries({
@@ -53,9 +68,18 @@ export default function CartPage() {
     }
   };
 
+  const handleRemoveAll = () => {
+    const confirm = window.confirm(
+      "Are you sure you want to remove this item from cart?"
+    );
+    if (confirm) {
+      removeAllMutation.mutate();
+    }
+  };
+
   return (
     <Container>
-      <Header />
+      <Header location={location.pathname} />
       {cartItems.length === 0 ? (
         <Box textAlign="center" mt={3}>
           <Typography variant="h5">Cart is empty</Typography>
@@ -110,7 +134,14 @@ export default function CartPage() {
               </TableFooter>
             </Table>
           </TableContainer>
-          <Box mt={3} textAlign="right">
+          <Box mt={3} display={"flex"} justifyContent={"space-between"}>
+            <Button
+              variant="contained"
+              color="warning"
+              onClick={handleRemoveAll}
+            >
+              Clear Items
+            </Button>
             <Button
               variant="contained"
               color="primary"

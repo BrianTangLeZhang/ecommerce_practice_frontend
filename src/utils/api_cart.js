@@ -20,3 +20,7 @@ export const removeItem = (id) => {
   cart = cart.filter((item) => item._id !== id);
   localStorage.setItem("cart", JSON.stringify(cart));
 };
+
+export const removeAll = () => {
+  localStorage.setItem("cart", JSON.stringify([]));
+};
