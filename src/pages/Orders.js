@@ -7,7 +7,6 @@ import {
   Paper,
   TableHead,
   Typography,
-  Container,
   Box,
   TextField,
   MenuItem,
@@ -30,7 +29,6 @@ export default function AllOrders() {
   const updateOrderMutation = useMutation({
     mutationFn: updateOrder,
     onSuccess: () => {
-      alert("Success");
       queryClient.invalidateQueries({
         queryKey: ["orders"],
       });
@@ -53,11 +51,8 @@ export default function AllOrders() {
     },
   });
 
-  const handleUpdateOrder = (order, value) => {
-    updateOrderMutation.mutate({
-      ...order,
-      status: value,
-    });
+  const handleUpdateOrder = (data) => {
+    updateOrderMutation.mutate(data);
   };
   const handleDeleteOrder = (id) => {
     deleteOrderMutation.mutate(id);
@@ -109,9 +104,11 @@ export default function AllOrders() {
                 <TableCell>
                   <TextField
                     select
-                    fullWidth
+                    sx={{width:"200px"}}
                     value={order.status}
-                    onChange={(e) => handleUpdateOrder(order, e.target.value)}
+                    onChange={(e) =>
+                      handleUpdateOrder({ ...order, status: e.target.value })
+                    }
                   >
                     <MenuItem value="pending">Pending</MenuItem>
                     <MenuItem value="paid">Paid</MenuItem>
