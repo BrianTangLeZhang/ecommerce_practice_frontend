@@ -45,8 +45,8 @@ export default function ProductCard(props) {
         </Box>
       </CardContent>
       <Box padding={1}>
-        <UserButtons />
-        <AdminButtons />
+        <UserButtons product={product} />
+        <AdminButtons id={product._id} />
       </Box>
     </Card>
   );

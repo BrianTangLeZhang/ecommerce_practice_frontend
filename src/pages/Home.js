@@ -3,11 +3,9 @@ import { useState } from "react";
 import {
   Box,
   Button,
-  Card,
   Typography,
   Container,
   Grid,
-  CardContent,
   Select,
   MenuItem,
   InputLabel,
@@ -15,16 +13,18 @@ import {
 } from "@mui/material";
 import { getProducts, getCategories } from "../utils/api_products";
 import { useQuery } from "@tanstack/react-query";
-import AdminButtons from "../components/buttons";
-import UserButtons from "../components/userBtn";
 import ProductCard from "../components/productCard";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
   const [category, setCategory] = useState("");
+  const [page, setPage] = useState(1);
 
-  const { data: products } = useQuery({
-    queryKey: ["products", category],
-    queryFn: () => getProducts(category),
+  const nav = useNavigate();
+
+  const { data: products = [] } = useQuery({
+    queryKey: ["products", category, page],
+    queryFn: () => getProducts(category, page),
   });
 
   const { data: categories = [] } = useQuery({
@@ -40,7 +40,11 @@ export default function Home() {
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
             Products
           </Typography>
-          <Button variant="contained" color="success">
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => nav("/add")}
+          >
             Add New
           </Button>
         </Box>
@@ -53,7 +57,10 @@ export default function Home() {
             value={category}
             color="primary"
             sx={{ backgroundColor: "white" }}
-            onChange={(e) => setCategory(e.target.value)}
+            onChange={(e) => {
+              setCategory(e.target.value);
+              setPage(1);
+            }}
           >
             <MenuItem value="all">All</MenuItem>
             {categories.map((c) => (
@@ -73,9 +80,37 @@ export default function Home() {
               ))}
             </Grid>
           ) : (
-            <></>
+            <Typography align="center" sx={{ paddingY: 5 }}>
+              No product already
+            </Typography>
           )}
         </Box>
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 2,
+          paddingY: 2,
+        }}
+      >
+        <Button
+          onClick={() => {
+            page !== 1 && setPage(page - 1);
+          }}
+        >
+          Previous
+        </Button>
+        <Typography>Page {page}</Typography>
+
+        <Button
+          onClick={() => {
+            products.length === 6 && setPage(page + 1);
+          }}
+        >
+          Next
+        </Button>
       </Box>
     </Container>
   );
