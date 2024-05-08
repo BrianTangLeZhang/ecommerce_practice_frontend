@@ -104,8 +104,9 @@ export default function AllOrders() {
                 <TableCell>
                   <TextField
                     select
-                    sx={{width:"200px"}}
+                    sx={{ width: "200px" }}
                     value={order.status}
+                    disabled={order.status === "pending" ? true : false}
                     onChange={(e) =>
                       handleUpdateOrder({ ...order, status: e.target.value })
                     }
