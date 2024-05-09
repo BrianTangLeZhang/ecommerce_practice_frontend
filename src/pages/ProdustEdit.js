@@ -10,8 +10,10 @@ import {
   Card,
   CardContent,
   TextField,
+  Box,
 } from "@mui/material";
 import { getProduct, updateProduct } from "../utils/api_products";
+import { uploadImage } from "../utils/api_image";
 
 export default function ProductsEdit() {
   const { id } = useParams();
@@ -20,24 +22,20 @@ export default function ProductsEdit() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
+  const [image, setImage] = useState("");
 
-  const {
-    data: product,
-    error,
-    isLoading,
-  } = useQuery({
+  const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProduct(id),
   });
 
-  // when data is fetched from API, set the states for all the fields with its current value
   useEffect(() => {
-    // if product is not undefined
     if (product) {
       setName(product.name);
       setDescription(product.description);
       setPrice(product.price);
       setCategory(product.category);
+      setImage(product.image ? product.image : "");
     }
   }, [product]);
 
@@ -52,6 +50,16 @@ export default function ProductsEdit() {
     },
   });
 
+  const uploadImageMutation = useMutation({
+    mutationFn: uploadImage,
+    onSuccess: (data) => {
+      setImage(data.image_url);
+    },
+    onError: (e) => {
+      alert(e);
+    },
+  });
+
   const handleFormSubmit = (e) => {
     e.preventDefault();
     updateProductMutation.mutate({
@@ -60,16 +68,16 @@ export default function ProductsEdit() {
       description: description,
       price: price,
       category: category,
+      image: image,
     });
+  };
+
+  const handleImageUpload = (e) => {
+    uploadImageMutation.mutate(e.target.files[0]);
   };
 
   if (isLoading) {
     return <Container>Loading...</Container>;
-  }
-
-  // if there is an error in API call
-  if (error) {
-    return <Container>{error.response.data.message}</Container>;
   }
 
   return (
@@ -119,9 +127,38 @@ export default function ProductsEdit() {
               <TextField
                 label="Category"
                 variant="outlined"
+                type="text"
                 fullWidth
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Box
+                sx={{
+                  height: 200,
+                  border: "2px solid black",
+                  borderRadius: 5,
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                {image !== "" ? (
+                  <img
+                    src={`http://localhost:5000/${image}`}
+                    alt=""
+                    style={{ maxHeight: 200 }}
+                  />
+                ) : (
+                  <Typography variant="p">No Image</Typography>
+                )}
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <input
+                type="file"
+                multiple="false"
+                onChange={handleImageUpload}
               />
             </Grid>
             <Grid item xs={12}>
