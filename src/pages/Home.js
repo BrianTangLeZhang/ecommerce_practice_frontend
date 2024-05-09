@@ -15,6 +15,8 @@ import { getProducts, getCategories } from "../utils/api_products";
 import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../components/productCard";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSnackbar } from "notistack";
+
 
 export default function Home() {
   const [category, setCategory] = useState("");

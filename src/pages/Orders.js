@@ -16,10 +16,11 @@ import { deleteOrder, getOrders, updateOrder } from "../utils/api_orders";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation } from "react-router-dom";
 import Header from "../components/header";
+import { useSnackbar } from "notistack";
 
 export default function AllOrders() {
   const location = useLocation();
-
+  const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
 
   const { data: orders = [] } = useQuery({
@@ -29,12 +30,13 @@ export default function AllOrders() {
   const updateOrderMutation = useMutation({
     mutationFn: updateOrder,
     onSuccess: () => {
+      enqueueSnackbar("Order status changed", { variant: "success" });
       queryClient.invalidateQueries({
         queryKey: ["orders"],
       });
     },
     onError: (e) => {
-      alert(e);
+      enqueueSnackbar(e, { variant: "error" });
     },
   });
 

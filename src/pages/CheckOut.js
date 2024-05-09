@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { createOrder } from "../utils/api_orders";
 import { removeAll } from "../utils/api_cart";
 import { useState } from "react";
+import { useSnackbar } from "notistack";
 
 export default function CheckOutPage() {
   const location = useLocation();
@@ -23,6 +24,7 @@ export default function CheckOutPage() {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const { data: checkoutItems = [] } = useQuery({
     queryKey: ["cart"],
@@ -41,12 +43,13 @@ export default function CheckOutPage() {
 
   const createNewOrderMutation = useMutation({
     mutationFn: createOrder,
-    onSuccess: () => {
-      alert("Success");
-      nav("/orders");
+    onSuccess: (resData) => {
+      removeAll();
+      const billplz_url = resData.billplz_url;
+      window.location.href = billplz_url;
     },
     onError: (e) => {
-      alert(e);
+      enqueueSnackbar(e, { variant: "error" });
     },
   });
 
@@ -62,20 +65,8 @@ export default function CheckOutPage() {
         products: [...checkoutItems],
         total: calculateTotal(),
       });
-      removeAllMutation.mutate();
     }
   };
-  const removeAllMutation = useMutation({
-    mutationFn: removeAll,
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["cart"],
-      });
-    },
-    onError: (e) => {
-      alert(e);
-    },
-  });
 
   return (
     <Container>

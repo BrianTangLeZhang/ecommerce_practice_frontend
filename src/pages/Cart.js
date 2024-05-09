@@ -12,11 +12,14 @@ import {
 } from "@mui/material";
 import Header from "../components/header";
 import { getCart, removeItem, removeAll } from "../utils/api_cart";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { useSnackbar } from "notistack";
 
 export default function CartPage() {
   const nav = useNavigate();
   const queryClient = useQueryClient();
+  const location = useLocation();
+  const { enqueueSnackbar } = useSnackbar();
 
   const { data: cartItems = [] } = useQuery({
     queryKey: ["cart"],
@@ -34,13 +37,13 @@ export default function CartPage() {
   const removeItemMutation = useMutation({
     mutationFn: removeItem,
     onSuccess: () => {
-      alert("Success");
+      enqueueSnackbar("Deleted", { variant: "success" });
       queryClient.invalidateQueries({
         queryKey: ["cart"],
       });
     },
     onError: (e) => {
-      alert(e);
+      enqueueSnackbar(e, { variant: "error" });
     },
   });
 
@@ -55,7 +58,7 @@ export default function CartPage() {
 
   return (
     <Container>
-      <Header />
+      <Header location={location.pathname} />
       {cartItems.length === 0 ? (
         <Box textAlign="center" mt={3}>
           <Typography variant="h5">Cart is empty</Typography>

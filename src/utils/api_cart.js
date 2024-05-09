@@ -22,5 +22,5 @@ export const removeItem = (id) => {
 };
 
 export const removeAll = () => {
-  localStorage.setItem("cart", JSON.stringify([]));
+  localStorage.removeItem("cart");
 };
