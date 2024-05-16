@@ -12,6 +12,7 @@ import {
 import { addProduct } from "../utils/api_products";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export default function ProductAddNew() {
   const [name, setName] = useState("");
@@ -20,6 +21,10 @@ export default function ProductAddNew() {
   const [category, setCategory] = useState("");
 
   const nav = useNavigate();
+
+  const [cookie] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookie;
+  const { token } = currentUser;
 
   //setup the mutation for add new product
   const addNewMutation = useMutation({
@@ -40,6 +45,7 @@ export default function ProductAddNew() {
       description: description,
       price: price,
       category: category,
+      token: token,
     });
   };
 

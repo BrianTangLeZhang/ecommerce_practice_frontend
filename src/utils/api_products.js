@@ -32,16 +32,19 @@ export const addProduct = async (data) => {
     {
       headers: {
         "Content-Type": "application/json", //tell the API you are sending JSON data(recommanded)
+        Authorization: "Bearer " + data.token,
       },
     }
   );
   return res.data;
 };
 
-export const deleteProduct = async (id) => {
-  const res = await axios.delete(
-    `${url}/products/${id}` //url
-  );
+export const deleteProduct = async (data) => {
+  const res = await axios.delete(`${url}/products/${data.id}`, {
+    headers: {
+      Authorization: "Bearer " + data.token, // include token in the API
+    },
+  });
   return res.data;
 };
 
@@ -61,6 +64,7 @@ export const updateProduct = async (data) => {
     {
       headers: {
         "Content-Type": "application/json", // telling the API you are sending JSON data
+        Authorization: "Bearer " + data.token,
       },
     }
   );

@@ -2,11 +2,17 @@ import { Button, ButtonGroup } from "@mui/material";
 import { deleteProduct } from "../utils/api_products";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 export default function AdminButtons(props) {
   const { id } = props;
   const nav = useNavigate();
   const queryClient = useQueryClient();
+
+  const [cookie] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookie;
+  const { token } = currentUser;
+
   const deleteMutation = useMutation({
     mutationFn: deleteProduct,
     onSuccess: () => {
@@ -22,7 +28,7 @@ export default function AdminButtons(props) {
 
   const handlerDelete = (e) => {
     e.preventDefault();
-    deleteMutation.mutate(id);
+    deleteMutation.mutate({ id: id, token: token });
   };
 
   return (

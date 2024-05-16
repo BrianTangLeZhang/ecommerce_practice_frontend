@@ -1,9 +1,13 @@
 import { Card, Typography, Box, CardContent } from "@mui/material";
 import UserButtons from "./userBtn";
 import AdminButtons from "./buttons";
+import { useCookies } from "react-cookie";
 
 export default function ProductCard(props) {
   const { product } = props;
+  const [cookies] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookies;
+  const { role, email } = currentUser;
   return (
     <Card sx={{ padding: 1 }}>
       <Typography variant="p" fontSize={20} fontWeight="bold">
@@ -27,7 +31,7 @@ export default function ProductCard(props) {
               color: "white",
             }}
           >
-            $ {product.price}
+            RM {product.price}
           </Typography>
           <Typography
             variant="span"
@@ -44,10 +48,15 @@ export default function ProductCard(props) {
           </Typography>
         </Box>
       </CardContent>
-      <Box padding={1}>
-        <UserButtons product={product} />
-        <AdminButtons id={product._id} />
-      </Box>
+      {!email && (
+        <Box padding={1}>
+          {role && role === "user" ? (
+            <UserButtons product={product} />
+          ) : (
+            <AdminButtons id={product._id} />
+          )}
+        </Box>
+      )}
     </Card>
   );
 }

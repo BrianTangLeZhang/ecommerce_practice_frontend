@@ -14,6 +14,7 @@ import {
 } from "@mui/material";
 import { getProduct, updateProduct } from "../utils/api_products";
 import { uploadImage } from "../utils/api_image";
+import { useCookies } from "react-cookie";
 
 export default function ProductsEdit() {
   const { id } = useParams();
@@ -23,6 +24,11 @@ export default function ProductsEdit() {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
+
+  const [cookie] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookie;
+  const { token } = currentUser;
+
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
@@ -69,6 +75,7 @@ export default function ProductsEdit() {
       price: price,
       category: category,
       image: image,
+      token: token,
     });
   };
 
