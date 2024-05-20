@@ -13,12 +13,14 @@ import { addProduct } from "../utils/api_products";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { useSnackbar } from "notistack";
 
 export default function ProductAddNew() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const nav = useNavigate();
 
@@ -30,11 +32,15 @@ export default function ProductAddNew() {
   const addNewMutation = useMutation({
     mutationFn: addProduct,
     onSuccess: () => {
-      alert("Success");
+      enqueueSnackbar("Produst has been added successfully", {
+        variant: "success",
+      });
       nav("/");
     },
     onError: (e) => {
-      alert(e);
+      enqueueSnackbar(e.response.data.msg, {
+        variant: "error",
+      });
     },
   });
 

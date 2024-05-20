@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import {
   Container,
   Grid,
@@ -11,16 +11,16 @@ import {
 } from "@mui/material";
 import Header from "../components/header";
 import { getCart } from "../utils/api_cart";
-import { useLocation, useNavigate } from "react-router-dom";
 import { createOrder } from "../utils/api_orders";
 import { removeAll } from "../utils/api_cart";
 import { useState } from "react";
 import { useSnackbar } from "notistack";
+import { useCookies } from "react-cookie";
 
 export default function CheckOutPage() {
-  const location = useLocation();
-
-  const nav = useNavigate();
+  const [cookie] = useCookies(["currentUser"]);
+  const { currentUser = {} } = cookie;
+  const { token } = currentUser;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -30,8 +30,6 @@ export default function CheckOutPage() {
     queryKey: ["cart"],
     queryFn: getCart,
   });
-
-  const queryClient = useQueryClient();
 
   const calculateTotal = () => {
     let total = 0;
@@ -55,22 +53,25 @@ export default function CheckOutPage() {
 
   const handleCheckOut = (e) => {
     if (name === "" || email === "") {
-      alert("You must fill the infomation before you make payment");
+      enqueueSnackbar("You must fill the infomation before you make payment", {
+        variant: "error",
+      });
     } else if (!checkoutItems && checkoutItems.length < 1) {
-      alert("Your cart is empty");
+      enqueueSnackbar("Your cart is empty", { variant: "error" });
     } else {
       createNewOrderMutation.mutate({
         customerName: name,
         customerEmail: email,
         products: [...checkoutItems],
         total: calculateTotal(),
+        token:token
       });
     }
   };
 
   return (
     <Container>
-      <Header location={location.pathname} />
+      <Header />
       <Box container display={"flex"} justifyContent={"space-between"}>
         <Grid
           container

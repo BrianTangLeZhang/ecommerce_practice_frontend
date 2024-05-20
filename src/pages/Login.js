@@ -20,7 +20,7 @@ import { loginUser } from "../utils/api_user";
 export default function LoginPage() {
   const nav = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [cookies, setCookie] = useCookies(["currentUser"]);
+  const [cookies,setCookie] = useCookies(["currentUser"]);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,19 +28,20 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: loginUser,
     onSuccess: (data) => {
+      console.log("Hi")
       setCookie("currentUser", data, { maxAge: 3600 * 2 });
       enqueueSnackbar("Successfully logged-in", { variant: "success" });
-      nav("/")
+      nav("/");
     },
-    onError: (error) => {
-      enqueueSnackbar(error.response.data.message, { variant: "error" });
+    onError: (e) => {
+      enqueueSnackbar(e.response.data.msg, { variant: "error" });
     },
   });
 
   const handleLogin = () => {
     if (email === "" || password === "") {
-      enqueueSnackbar("All fields are required", { variant: "danger" });
-    } else {
+      enqueueSnackbar("All fields are required", { variant: "error" });
+    }else {
       loginMutation.mutate({
         email,
         password,

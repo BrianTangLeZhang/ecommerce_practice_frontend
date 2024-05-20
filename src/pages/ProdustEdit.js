@@ -15,6 +15,7 @@ import {
 import { getProduct, updateProduct } from "../utils/api_products";
 import { uploadImage } from "../utils/api_image";
 import { useCookies } from "react-cookie";
+import { useSnackbar } from "notistack";
 
 export default function ProductsEdit() {
   const { id } = useParams();
@@ -24,11 +25,11 @@ export default function ProductsEdit() {
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
   const [image, setImage] = useState("");
+  const { enqueueSnackbar } = useSnackbar();
 
   const [cookie] = useCookies(["currentUser"]);
   const { currentUser = {} } = cookie;
   const { token } = currentUser;
-
 
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
@@ -48,11 +49,11 @@ export default function ProductsEdit() {
   const updateProductMutation = useMutation({
     mutationFn: updateProduct,
     onSuccess: () => {
-      alert("Success");
+      enqueueSnackbar("Product updated successfully", { variant: "success" });
       nav("/");
     },
     onError: (e) => {
-      alert(e);
+      enqueueSnackbar(e.response.data.msg, { variant: "error" });
     },
   });
 
@@ -62,7 +63,7 @@ export default function ProductsEdit() {
       setImage(data.image_url);
     },
     onError: (e) => {
-      alert(e);
+      enqueueSnackbar(e.response.data.msg, { variant: "error" });
     },
   });
 

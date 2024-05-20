@@ -11,6 +11,7 @@ import { SnackbarProvider } from "notistack";
 import { CookiesProvider } from "react-cookie";
 import LoginPage from "./pages/Login";
 import SignUpPage from "./pages/Signup";
+import Category from "./pages/Category";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ export default function App() {
               <Route path="/verify-payment" element={<PaymentVerify />}></Route>
               <Route path="/login" element={<LoginPage />}></Route>
               <Route path="/signup" element={<SignUpPage />}></Route>
-
+              <Route path="/categories" element={<Category />}></Route>
             </Routes>
           </BrowserRouter>
         </SnackbarProvider>

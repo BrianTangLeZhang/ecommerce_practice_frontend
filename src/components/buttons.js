@@ -26,8 +26,7 @@ export default function AdminButtons(props) {
     },
   });
 
-  const handlerDelete = (e) => {
-    e.preventDefault();
+  const handlerDelete = () => {
     deleteMutation.mutate({ id: id, token: token });
   };
 
@@ -40,11 +39,7 @@ export default function AdminButtons(props) {
       >
         Edit
       </Button>
-      <Button
-        variant="contained"
-        color="error"
-        onClick={(e) => handlerDelete(e)}
-      >
+      <Button variant="contained" color="error" onClick={handlerDelete}>
         Delete
       </Button>
     </ButtonGroup>

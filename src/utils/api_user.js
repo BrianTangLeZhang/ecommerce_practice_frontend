@@ -5,7 +5,7 @@ const url = "http://localhost:5000";
 export const loginUser = async (data) => {
   const response = await axios.post(
     `${url}/users/login`, // url of the POST API
-    JSON.stringify(data), // data you want to pass through the API in JSON format
+    JSON.stringify(data),
     {
       headers: {
         "Content-Type": "application/json", // telling the API you are sending JSON data

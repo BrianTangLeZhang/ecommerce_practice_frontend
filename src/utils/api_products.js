@@ -48,15 +48,6 @@ export const deleteProduct = async (data) => {
   return res.data;
 };
 
-export const getCategories = async () => {
-  try {
-    const res = await axios.get(`${url}/categories`);
-    return res.data;
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 export const updateProduct = async (data) => {
   const res = await axios.put(
     `${url}/products/${data.id}`, // url of the PUT API

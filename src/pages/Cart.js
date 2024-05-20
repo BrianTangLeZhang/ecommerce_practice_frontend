@@ -1,4 +1,4 @@
-import { Container, Typography, Box, Button, IconButton } from "@mui/material";
+import { Container, Typography, Box, Button } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Table,
@@ -11,7 +11,7 @@ import {
   Paper,
 } from "@mui/material";
 import Header from "../components/header";
-import { getCart, removeItem, removeAll } from "../utils/api_cart";
+import { getCart, removeItem } from "../utils/api_cart";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
@@ -37,13 +37,13 @@ export default function CartPage() {
   const removeItemMutation = useMutation({
     mutationFn: removeItem,
     onSuccess: () => {
-      enqueueSnackbar("Deleted", { variant: "success" });
+      enqueueSnackbar("Item is deleted", { variant: "success" });
       queryClient.invalidateQueries({
         queryKey: ["cart"],
       });
     },
     onError: (e) => {
-      enqueueSnackbar(e, { variant: "error" });
+      enqueueSnackbar(e.response.data.msg, { variant: "error" });
     },
   });
 

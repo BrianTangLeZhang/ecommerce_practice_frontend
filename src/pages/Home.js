@@ -11,7 +11,8 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
-import { getProducts, getCategories } from "../utils/api_products";
+import { getProducts } from "../utils/api_products";
+import { getCategories } from "../utils/api_category";
 import { useQuery } from "@tanstack/react-query";
 import ProductCard from "../components/productCard";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +84,7 @@ export default function Home() {
             ))}
           </Select>
         </FormControl>
-        <Box sx={{ flex: 1}}>
+        <Box sx={{ flex: 1 }}>
           {products || products.length > 0 ? (
             <>
               <Box>

@@ -48,7 +48,7 @@ export default function ProductCard(props) {
           </Typography>
         </Box>
       </CardContent>
-      {!email && (
+      {email && (
         <Box padding={1}>
           {role && role === "user" ? (
             <UserButtons product={product} />

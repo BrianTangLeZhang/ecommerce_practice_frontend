@@ -6,8 +6,9 @@ import { removeAll } from "../utils/api_cart";
 export default function Header() {
   const location = useLocation();
   const nav = useNavigate();
-  const [cookies, setCookie, removeCookie] = useCookies(["currentUser"]);
+  const [cookies, removeCookie] = useCookies(["currentUser"]);
   const { currentUser } = cookies;
+  const { role } = currentUser;
 
   let pageTitle = "Welcome to My Store";
 
@@ -24,8 +25,8 @@ export default function Header() {
   }
 
   const handleLogout = () => {
+    removeAll();
     removeCookie("currentUser");
-    removeAll(); //empty the cart
     nav("/");
   };
 
@@ -56,8 +57,7 @@ export default function Header() {
             style={{
               textTransform: "capitalize",
               color: location.pathname === "/" ? "white" : "#0288d1",
-              backgroundColor:
-                location.pathname === "/" ? "#0288d1" : "white",
+              backgroundColor: location.pathname === "/" ? "#0288d1" : "white",
             }}
             onClick={() => {
               nav("/");
@@ -91,6 +91,21 @@ export default function Header() {
           >
             My Orders
           </Button>
+          {role && role === "admin" && (
+            <Button
+              style={{
+                textTransform: "capitalize",
+                color: location.pathname === "/categories" ? "white" : "#0288d1",
+                backgroundColor:
+                  location.pathname === "/categories" ? "#0288d1" : "white",
+              }}
+              onClick={() => {
+                nav("/categories");
+              }}
+            >
+              Categories
+            </Button>
+          )}
         </Box>
         {currentUser ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>

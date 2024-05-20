@@ -20,7 +20,7 @@ import { signUpUser } from "../utils/api_user";
 export default function SignUpPage() {
   const nav = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const [cookies, setCookie] = useCookies(["currentUser"]);
+  const [cookies,setCookie] = useCookies(["currentUser"]);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -36,8 +36,8 @@ export default function SignUpPage() {
       enqueueSnackbar("Successfully created account", { variant: "success" });
       nav("/");
     },
-    onError: (error) => {
-      enqueueSnackbar(error.response.data.message, { variant: "error" });
+    onError: (e) => {
+      enqueueSnackbar(e.response.data.msg, { variant: "error" });
     },
   });
 
@@ -48,9 +48,11 @@ export default function SignUpPage() {
       password === "" ||
       confirmPassword === ""
     ) {
-      enqueueSnackbar("All fields are required", { variant: "danger" });
+      enqueueSnackbar("All fields are required", { variant: "error" });
     } else if (password !== confirmPassword) {
-      enqueueSnackbar("Password must be match.", { variant: "danger" });
+      enqueueSnackbar("Password must be match.", { variant: "error" });
+    } else if (!email.includes("@") || !email.includes(".")) {
+      enqueueSnackbar("Email format is incorrect", { variant: "error" });
     } else {
       signUpMutation.mutate({
         name,
