@@ -7,7 +7,7 @@ export default function Header() {
   const location = useLocation();
   const nav = useNavigate();
   const [cookies, removeCookie] = useCookies(["currentUser"]);
-  const { currentUser } = cookies;
+  const { currentUser={} } = cookies;
   const { role } = currentUser;
 
   let pageTitle = "Welcome to My Store";
@@ -107,7 +107,7 @@ export default function Header() {
             </Button>
           )}
         </Box>
-        {currentUser ? (
+        {currentUser.email ? (
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <span>{currentUser.name}</span>
             <Button

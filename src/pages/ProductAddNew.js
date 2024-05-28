@@ -8,12 +8,15 @@ import {
   Card,
   CardContent,
   TextField,
+  MenuItem,
+  Select,
 } from "@mui/material";
 import { addProduct } from "../utils/api_products";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { useSnackbar } from "notistack";
+import { getCategories } from "../utils/api_category";
 
 export default function ProductAddNew() {
   const [name, setName] = useState("");
@@ -27,6 +30,11 @@ export default function ProductAddNew() {
   const [cookie] = useCookies(["currentUser"]);
   const { currentUser = {} } = cookie;
   const { token } = currentUser;
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
+  });
 
   //setup the mutation for add new product
   const addNewMutation = useMutation({
@@ -99,13 +107,24 @@ export default function ProductAddNew() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              <Select
                 label="Category"
                 variant="outlined"
                 value={category}
                 fullWidth
                 onChange={(e) => setCategory(e.target.value)}
-              />
+              >
+                {categories.length > 0 && (
+                  <>
+                    {categories.map((category) => (
+                      <MenuItem
+                        key={category._id}
+                        value={category._id}
+                      >{category.name}</MenuItem>
+                    ))}
+                  </>
+                )}
+              </Select>
             </Grid>
             <Grid item xs={12}>
               <Button

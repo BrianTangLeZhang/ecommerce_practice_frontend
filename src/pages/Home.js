@@ -78,8 +78,8 @@ export default function Home() {
           >
             <MenuItem value="all">All</MenuItem>
             {categories.map((c) => (
-              <MenuItem key={c} value={c}>
-                {c}
+              <MenuItem key={c._id} value={c._id}>
+                {c.name}
               </MenuItem>
             ))}
           </Select>

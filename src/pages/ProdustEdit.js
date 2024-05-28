@@ -11,7 +11,10 @@ import {
   CardContent,
   TextField,
   Box,
+  Select,
+  MenuItem,
 } from "@mui/material";
+import { getCategories } from "../utils/api_category";
 import { getProduct, updateProduct } from "../utils/api_products";
 import { uploadImage } from "../utils/api_image";
 import { useCookies } from "react-cookie";
@@ -34,6 +37,11 @@ export default function ProductsEdit() {
   const { data: product, isLoading } = useQuery({
     queryKey: ["product", id],
     queryFn: () => getProduct(id),
+  });
+
+  const { data: categories = [] } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategories,
   });
 
   useEffect(() => {
@@ -132,14 +140,23 @@ export default function ProductsEdit() {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
+              <Select
                 label="Category"
                 variant="outlined"
-                type="text"
-                fullWidth
                 value={category}
+                fullWidth
                 onChange={(e) => setCategory(e.target.value)}
-              />
+              >
+                {categories.length > 0 && (
+                  <>
+                    {categories.map((category) => (
+                      <MenuItem key={category._id} value={category._id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </>
+                )}
+              </Select>
             </Grid>
             <Grid item xs={12}>
               <Box
